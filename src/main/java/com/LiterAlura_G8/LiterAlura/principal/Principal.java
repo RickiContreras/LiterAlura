@@ -2,6 +2,10 @@ package com.LiterAlura_G8.LiterAlura.principal;
 
 import com.LiterAlura_G8.LiterAlura.api.ConsumoAPI;
 import com.LiterAlura_G8.LiterAlura.api.ConversorDeDatos;
+import com.LiterAlura_G8.LiterAlura.model.Datos;
+import com.LiterAlura_G8.LiterAlura.model.DatosAutor;
+import com.LiterAlura_G8.LiterAlura.model.DatosLibro;
+import com.LiterAlura_G8.LiterAlura.model.Libro;
 import com.LiterAlura_G8.LiterAlura.repository.LibroRepository;
 
 import java.util.Scanner;
@@ -12,7 +16,7 @@ public class Principal {
     private ConversorDeDatos conversor = new ConversorDeDatos();
     private final String URL_BASE = "https://gutendex.com/books/?search=";
 
-    private LibroRepository repository;
+    private final LibroRepository repository;
 
     public Principal(LibroRepository repository) {
         this.repository = repository;
@@ -59,6 +63,24 @@ public class Principal {
         }
     }
 
+//    private void buscarLibroPorTitulo() {
+//        System.out.println("Ingrese el título del libro a buscar:");
+//        String titulo = teclado.nextLine();
+//        String url = URL_BASE + titulo.replace(" ", "+");
+//
+//        try {
+//            String json = consumoApi.obtenerDatos(url);
+//            DatosLibro datos = conversor.obtenerDatos(json, DatosLibro.class);
+//
+//
+//            System.out.println("Libro encontrado:");
+//            System.out.println(datos);
+//
+//        } catch (Exception e) {
+//            System.out.println("Error al buscar el libro: " + e.getMessage());
+//        }
+//    }
+
     private void buscarLibroPorTitulo() {
         System.out.println("Ingrese el título del libro a buscar:");
         String titulo = teclado.nextLine();
@@ -66,18 +88,29 @@ public class Principal {
 
         try {
             String json = consumoApi.obtenerDatos(url);
-            DatosLibro datos = conversor.obtenerDatos(json, DatosLibro.class);
+            Datos libroBuscado = conversor.obtenerDatos(json, Datos.class);
 
+            if (libroBuscado.results().isEmpty()) {
+                System.out.println("No se encontraron resultados para ese título.");
+            } else {
+                DatosLibro primerResultado = (DatosLibro) libroBuscado.results().get(0);
 
-            System.out.println("Libro encontrado:");
-            System.out.println(datos);
+                Libro libro = new Libro(
+                        primerResultado.titulo(),
+                        primerResultado.idioma(),
+                        primerResultado.autores().stream().map(DatosAutor::nombre).toList()
+                );
+
+                repository.save(libro);
+
+                System.out.println("Libro guardado correctamente:");
+                System.out.println(libro);
+            }
 
         } catch (Exception e) {
-            System.out.println("Error al buscar el libro: " + e.getMessage());
+            System.out.println("Error al buscar o guardar el libro: " + e.getMessage());
         }
     }
-
-
     private void mostrarLibrosRegistrados() {
         System.out.println("Mostrando libros registrados...");
     }
