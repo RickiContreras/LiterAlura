@@ -2,6 +2,8 @@ package com.LiterAlura_G8.LiterAlura.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "libros")
 public class Libro {
@@ -9,57 +11,61 @@ public class Libro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String titulo;
-    private String idioma;
+    @ElementCollection
+    private List<String> idiomas;
     private Integer descargas;
+    @ElementCollection
+    private List<String> autores;
     @ManyToOne(cascade = CascadeType.ALL)
     private Autor autor;
 
     @Override
     public String toString() {
         return ", titulo='" + titulo + '\'' +
-                ", idioma='" + idioma + '\'' +
+                ", idiomas='" + idiomas + '\'' +
                 ", descargas=" + descargas +
-                ", autor=" + autor +
+                ", autores=" + autores +
                 '}';
     }
 
-    public Long getId() {
-        return id;
+    // Constructor por defecto (requerido por JPA)
+    public Libro() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    // Constructor
+    public Libro(String titulo, List<String> idiomas, List<String> autores) {
+        this.titulo = titulo;
+        this.idiomas = idiomas;
+        this.autores = autores;
+    }
+
+    // Getters y Setters
+
+    public Long getId() {
+        return id;
     }
 
     public String getTitulo() {
         return titulo;
     }
 
+    public List<String> getIdiomas() {
+        return idiomas;
+    }
+
+    public List<String> getAutores() {
+        return autores;
+    }
+
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
 
-    public String getIdioma() {
-        return idioma;
+    public void setIdiomas(List<String> idiomas) {
+        this.idiomas = idiomas;
     }
 
-    public void setIdioma(String idioma) {
-        this.idioma = idioma;
-    }
-
-    public Integer getDescargas() {
-        return descargas;
-    }
-
-    public void setDescargas(Integer descargas) {
-        this.descargas = descargas;
-    }
-
-    public Autor getAutor() {
-        return autor;
-    }
-
-    public void setAutor(Autor autor) {
-        this.autor = autor;
+    public void setAutores(List<String> autores) {
+        this.autores = autores;
     }
 }
