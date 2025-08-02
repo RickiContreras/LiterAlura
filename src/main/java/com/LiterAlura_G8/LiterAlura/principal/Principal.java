@@ -68,7 +68,7 @@ public class Principal {
             String json = consumoApi.obtenerDatos(url);
             DatosLibro datos = conversor.obtenerDatos(json, DatosLibro.class);
 
-            // Aquí deberás guardar en base de datos, si querés.
+
             System.out.println("Libro encontrado:");
             System.out.println(datos);
 
@@ -77,7 +77,7 @@ public class Principal {
         }
     }
 
-    // Estos métodos los completarás más adelante
+
     private void mostrarLibrosRegistrados() {
         System.out.println("Mostrando libros registrados...");
     }
