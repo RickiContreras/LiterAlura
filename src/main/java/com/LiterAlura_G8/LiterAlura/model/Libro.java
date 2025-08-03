@@ -28,18 +28,15 @@ public class Libro {
                 '}';
     }
 
-    // Constructor por defecto (requerido por JPA)
     public Libro() {
     }
 
-    // Constructor
     public Libro(String titulo, List<String> idiomas, List<String> autores) {
         this.titulo = titulo;
         this.idiomas = idiomas;
         this.autores = autores;
     }
 
-    // Getters y Setters
     public Long getId() {
         return id;
     }
